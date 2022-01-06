@@ -10,6 +10,7 @@
 namespace fs = std::filesystem;
 #include <vector>
 #include <thread>
+#include "colors.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wwrite-strings"
@@ -48,7 +49,7 @@ void build(char dir[], int jobs)
     }
 
     // std::cout << text;
-    //std::cout << complete_file << "\n\n";
+    // std::cout << complete_file << "\n\n";
 
     std::string str;
     std::string name;
@@ -60,11 +61,17 @@ void build(char dir[], int jobs)
 
     std::string CC;
 
-    std::string source_folder;
+    // std::string source_folder;
+    std::vector<std::string> source_folder;
     std::string include_folder;
     std::string link_libraries;
     std::string flags;
     std::string executable;
+    bool executable_b = false;
+    std::string library;
+    bool library_b = false;
+    std::string shared_library;
+    bool shared_library_b = false;
 
     for (size_t i = 0; i < complete_file.length(); i++)
     {
@@ -108,27 +115,41 @@ void build(char dir[], int jobs)
                     compiler_flag_comma = false;
                     compiler_flag = false;
 
-                    //std::cout << "CC = " << CC << "\n";
+                    // std::cout << "CC = " << CC << "\n";
                 }
                 if (setting_value == true)
                 {
 
-                    //std::cout << name << " = " << str << "\n";
+                    // std::cout << name << " = " << str << "\n";
                     setting_value = false;
 
                     // printf("\n%s = %s\n", name, str);
                     if (name == "add_source_folder,")
-                        source_folder = str;
+                        source_folder.push_back(str);
                     if (name == "add_include,")
                         include_folder = str;
                     if (name == "link_libraries,")
                         link_libraries = str;
-                    if (name == "add_flags,") {
+                    if (name == "add_flags,")
+                    {
                         flags += " ";
                         flags += str;
                     }
                     if (name == "add_executable,")
+                    {
                         executable = str;
+                        executable_b = true;
+                    }
+                    if (name == "add_library,")
+                    {
+                        library = str;
+                        library_b = true;
+                    }
+                    if (name == "add_shared_library,")
+                    {
+                        shared_library = str;
+                        shared_library_b = true;
+                    }
 
                     str = "";
                     name = "";
@@ -149,56 +170,93 @@ void build(char dir[], int jobs)
     std::vector<std::string> objs;
 
     // std::string path = "/path/to/directory";
-    for (const auto &entry : fs::directory_iterator(source_folder))
+    for (size_t i = 0; i < source_folder.size(); i++)
     {
-        if(entry.path().extension() != ".o") {
-        
-        //std::cout << entry.path() << std::endl;
+        for (const auto &entry : fs::directory_iterator(source_folder[i]))
+        {
+            if (entry.path().extension() != ".o")
+            {
 
-        std::string sus;
-        std::string obj;
+                // std::cout << entry.path() << std::endl;
 
-        sus += CC;
-        sus += " ";
-        sus += flags;
-        sus += " -I";
-        sus += include_folder;
-        sus += " ";
-        sus += link_libraries;
-        sus += " -c ";
-        sus += entry.path();
-        sus += " -o ";
-        sus += entry.path();
-        sus += ".o";
+                std::string sus;
+                std::string obj;
 
-        obj += entry.path();
-        obj += ".o";
+                sus += CC;
+                sus += " ";
+                sus += flags;
+                sus += " -I";
+                sus += include_folder;
+                sus += " ";
+                sus += link_libraries;
+                sus += " -c ";
+                sus += entry.path();
+                sus += " -o ";
+                sus += entry.path();
+                sus += ".o";
 
-        cmds.push_back(sus);
-        objs.push_back(obj);
-        //std::cout << sus << "\n";
+                obj += entry.path();
+                obj += ".o";
 
+                cmds.push_back(sus);
+                objs.push_back(obj);
+                // std::cout << sus << "\n";
+            }
         }
     }
 
-    std::string sus;
+    std::vector<std::string> sus;
 
-    sus += CC;
-        sus += " ";
-        sus += flags;
-        sus += " -I";
-        sus += include_folder;
-        sus += " ";
-        sus += link_libraries;
-        sus += " ";
+    if (executable_b)
+    {
+        std::string sos;
+        sos += CC;
+        sos += " ";
+        sos += flags;
+        sos += " -I";
+        sos += include_folder;
+        sos += " ";
+        sos += link_libraries;
+        sos += " ";
         for (size_t i = 0; i < objs.size(); i++)
         {
-            sus += " ";
-            sus += objs[i];
+            sos += " ";
+            sos += objs[i];
         }
-        
-        sus += " -o ";
-        sus += executable;
+
+        sos += " -o ";
+        sos += executable;
+
+        sus.push_back(sos);
+    }
+    if (library_b)
+    {
+        std::string sos;
+        sos += "ar rcs ";
+        sos += library;
+        sos += " ";
+        for (size_t i = 0; i < objs.size(); i++)
+        {
+            sos += " ";
+            sos += objs[i];
+        }
+        sus.push_back(sos);
+    }
+    if (library_b)
+    {
+        std::string sos;
+        sos += CC;
+        sos += " -shared ";
+        for (size_t i = 0; i < objs.size(); i++)
+        {
+            sos += " ";
+            sos += objs[i];
+        }
+        sos += " -o ";
+        sos += shared_library;
+
+        sus.push_back(sos);
+    }
 
     bool working = true;
     int jobs_left = cmds.size();
@@ -208,21 +266,28 @@ void build(char dir[], int jobs)
 
     while (working)
     {
-        if(current_jobs != jobs) {
-            if(jobs > current_jobs) {
-                printf("[%lu / %lu] %s", job_index + 1, cmds.size() + 1, cmds[job_index].c_str());
+        if (current_jobs != jobs)
+        {
+            if (jobs > current_jobs)
+            {
+                printf("%s[%lu / %lu] %s%s", CYN, job_index + 1, cmds.size() + sus.size(), reset, cmds[job_index].c_str());
                 system(cmds[job_index].c_str());
-                printf(" \e[0;32mdone\e[0m\n");
+                printf(" %sdone%s\n", GRN, reset);
                 job_index++;
                 jobs_left--;
             }
         }
-        if(jobs_left == 0) break;
+        if (jobs_left == 0)
+            break;
     }
 
-    printf("[%lu / %lu] %s", cmds.size() + 1, cmds.size() + 1, sus.c_str());
-    system(sus.c_str());
-    printf(" \e[0;32mdone\e[0m\n");
+    for (size_t i = 0; i < sus.size(); i++)
+    {
+        printf("%s[%lu / %lu] %s%s", CYN, cmds.size() + 1, cmds.size() + sus.size(), reset, sus[i].c_str());
+        system(sus[i].c_str());
+        printf(" %sdone%s\n", GRN, reset);
+        job_index++;
+    }
 
     // Close the file
     MyReadFile.close();
