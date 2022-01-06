@@ -204,14 +204,15 @@ void build(char dir[], int jobs)
     int jobs_left = cmds.size();
 
     int current_jobs = 0;
-    int job_index = 0;
+    long unsigned int job_index = 0;
 
     while (working)
     {
         if(current_jobs != jobs) {
             if(jobs > current_jobs) {
-                printf("%s\n", cmds[job_index].c_str());
+                printf("[%lu / %lu] %s", job_index + 1, cmds.size() + 1, cmds[job_index].c_str());
                 system(cmds[job_index].c_str());
+                printf(" \e[0;32mdone\e[0m\n");
                 job_index++;
                 jobs_left--;
             }
@@ -219,10 +220,9 @@ void build(char dir[], int jobs)
         if(jobs_left == 0) break;
     }
 
-    printf("%s\n", sus.c_str());
+    printf("[%lu / %lu] %s", cmds.size() + 1, cmds.size() + 1, sus.c_str());
     system(sus.c_str());
-
-    printf("\n");
+    printf(" \e[0;32mdone\e[0m\n");
 
     // Close the file
     MyReadFile.close();
