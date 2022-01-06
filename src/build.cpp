@@ -174,7 +174,7 @@ void build(char dir[], int jobs)
     {
         for (const auto &entry : fs::directory_iterator(source_folder[i]))
         {
-            if (entry.path().extension() != ".o")
+            if (entry.path().extension() != ".o" && entry.path().extension() != ".h" && entry.path().extension() != ".hpp")
             {
 
                 // std::cout << entry.path() << std::endl;
