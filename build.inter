@@ -1,6 +1,0 @@
-$_CC, /usr/bin/g++;
-add_source_folder, ./src;
-add_include, ./include;
-link_libraries, -lm;
-add_flags, ;
-add_executable, inter;
