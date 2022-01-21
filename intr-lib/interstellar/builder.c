@@ -3,38 +3,33 @@
 #include <string.h>
 #include <stdio.h>
 
-void create_jobs(struct project *p, struct project_jobber *pj) {
-    inter_log("Creating jobs.", JOBS);
-    for (size_t i = 0; i < p->source_count; i++)
+void compile_jobs(struct project *p, struct project_jobber *pj)
+{
+    inter_log("Starting job daemon.", JOBS);
+
+    /*char inc[5000];
+
+    for (size_t i = 0; i < p->include_count; i++)
     {
-        pj->jobs++;
+        char *e[5000];
 
-        struct job j;
-        j.f = p->source_files[i];
-        j.flags = p->flags;
-        j.ldflags = p->ld_flags;
-        j.index = pj->jobs;
+        snprintf(e, "-I%s ", 5000, p->include[i]);
 
-        pj->j[pj->jobs] = j;
-
-        char o[FILENAME_MAX];
-        
-        //printf("%s\n", p->source_files[i]);
-
-        //snprintf(o, FILENAME_MAX, "Created Job: %s\n", p->source_files[i]);
-        //printf("%s", o);
-        //strcat(o, p->source_files[i]);
-        //strcat(o, "\n");
-        //printf("JOB Created: %s\n", j.f);
-        //sprintf(o, "Created: %s\n", (char *)j.f);
-
-        //sprintf(o, "Created job: %s\n", j.f);
-        //printf("%s\n", o);
-
-        //printf("> %d\n", j.index);
-        //inter_log(o, JOBS);
-        //printf("%s\n" ,o);
+        strncat(inc, 5000, e);
     }
 
-    //printf("%d\n", pj->jobs);
+    printf("%s\n", inc);*/
+
+    for (size_t i = 0; i < p->source_count; i++)
+    {
+        inter_log(p->source_files[i], JOBS);
+
+        char *s;
+        char *o;
+        sprintf(o, "%s.o", p->source_files[i]);
+
+        sprintf(s, "%s %s %s -o %s", p->cc, p->flags, p->source_files[i], p->ld_flags, o);
+
+        printf("%s\n", s);
+    }
 };

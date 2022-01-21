@@ -26,8 +26,9 @@ void build_project(struct project *p) {
     struct project_jobber pj;        
     pj.p = p;
     pj.jobs = 0;
-
-    create_jobs(p, &pj);
+    
+    compile_jobs(p, &pj);
+    
 
     printf("\e[44m  INTER \e[0m Project %s, has been compiled!  \n", p->out);
 }

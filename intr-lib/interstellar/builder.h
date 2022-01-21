@@ -3,26 +3,16 @@
 
 #include "../interstellar.h"
 
-struct job
-{
-    int index;
-
-    char *f;
-
-    char *flags;
-    char *ldflags;
-};
-
 
 struct project_jobber
 {
     struct project *p;
+    
+    char **cmds;
     int jobs;
-
-    struct job j[];
 };
 
 
-void create_jobs(struct project *p, struct project_jobber *pj);
+void compile_jobs(struct project *p, struct project_jobber *pj);
 
 #endif
