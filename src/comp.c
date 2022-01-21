@@ -39,7 +39,7 @@ void start_comp(int silent, int verbose, int jobs, char *compiler, char *fn)
                 strcat(full_path,"/");
                 strcat(full_path,dir->d_name);
                 strcat(full_path," ");
-                printf("%s\n",full_path);
+                //printf("%s\n",full_path);
             
                 strcat(compiler_command, full_path);
                 
@@ -54,7 +54,7 @@ void start_comp(int silent, int verbose, int jobs, char *compiler, char *fn)
 
     system("./cbuild");
 
-    printf("%s\n", compiler_command);
+    //printf("%s\n", compiler_command);
 
     //ccmain();
 }

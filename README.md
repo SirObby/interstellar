@@ -1,4 +1,11 @@
 # Interstellar
 Interstellar is a build system.
 
-**THE INTERSTELLAR BUILD SYSTEM SHOULD NOT BE USED FOR PRODUCTION.**
+The Interstellar build system uses the C programming language for configuration of the build system.
+
+## Wiki
+
+### Installation
+```
+./build.sh install
+```

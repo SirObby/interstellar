@@ -19,6 +19,15 @@ enum project_type {
     DYNAMIC_LIBRARY
 };
 
+enum log_type {
+    INFO,
+    WARNING,
+    ERROR,
+    
+    INTER,
+    JOBS
+};
+
 typedef struct project
 {
     char* cc;
@@ -32,8 +41,13 @@ typedef struct project
     char include[FILENAME_MAX][1024];
 
     enum project_type type;
-};
 
+    int source_count;
+    int include_count;
+} project;
+
+void start_interstellar();
 void build_project(struct project *p);
+void inter_log(char *message, enum log_type type);
 
 #endif
