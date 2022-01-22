@@ -13,8 +13,9 @@ void main() {
     mainp.ld_flags = "-lm -pthread";
     
     strcpy(mainp.source_files[0], "./src/main.c");
+    strcpy(mainp.source_files[1], "./src/comp.c");
     strcpy(mainp.include[0], "./include");
-    intrlib.source_count = 0;
+    intrlib.source_count = 1;
     intrlib.include_count = 0;
 
     mainp.out = "./build/inter";
@@ -26,7 +27,7 @@ void main() {
     intrlib.ld_flags = "-lm -pthread";
     
     strcpy(intrlib.source_files[0], "./intr-lib/main.c");
-    strcpy(intrlib.source_files[0], "./intr-lib/interstellar/builder.c");
+    strcpy(intrlib.source_files[1], "./intr-lib/interstellar/builder.c");
     strcpy(intrlib.include[0], "./intr-lib/");
     intrlib.source_count = 1;
     intrlib.include_count = 0;

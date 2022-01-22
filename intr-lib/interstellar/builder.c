@@ -27,8 +27,10 @@ void compile_jobs(struct project *p, struct project_jobber *pj)
 
         //printf("%s %s %s %s -o %s.o\n", p->cc, p->flags, p->source_files[i], p->ld_flags, p->source_files[i]);
 
-        char *s =  (char *)malloc(FILENAME_MAX + 1);
-        s[FILENAME_MAX + 1] = '\0';
+        char s[sizeof(p->cc) + sizeof(p->flags) + sizeof(p->source_files[i]) + sizeof(p->ld_flags) + sizeof(p->source_files[i]) + 1] = /*(char *)malloc(sizeof(p->cc) + sizeof(p->flags) + sizeof(p->source_files[i]) + sizeof(p->ld_flags) + sizeof(p->source_files[i]) + 1)*/ "";
+        s[sizeof(p->cc) + sizeof(p->flags) + sizeof(p->source_files[i]) + sizeof(p->ld_flags) + sizeof(p->source_files[i]) + 1] = '\0';
+
+        printf("%ld\n", sizeof(s));
 
         sprintf(s, "%s %s %s %s -o %s.o", p->cc, p->flags, p->source_files[i], p->ld_flags, p->source_files[i]);
 
