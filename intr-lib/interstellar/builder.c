@@ -2,6 +2,7 @@
 #include "../interstellar.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void compile_jobs(struct project *p, struct project_jobber *pj)
 {
@@ -24,11 +25,11 @@ void compile_jobs(struct project *p, struct project_jobber *pj)
     {
         inter_log(p->source_files[i], JOBS);
 
-        char *s;
-        char *o;
-        sprintf(o, "%s.o", p->source_files[i]);
+        char *s = malloc(4096);
+        char *o = malloc(4096);
+        snprintf(o, 4096, "%s.o", p->source_files[i]);
 
-        sprintf(s, "%s %s %s -o %s", p->cc, p->flags, p->source_files[i], p->ld_flags, o);
+        snprintf(s, 4096, "%s %s %s -o %s", p->cc, p->flags, p->source_files[i], p->ld_flags, o);
 
         printf("%s\n", s);
     }

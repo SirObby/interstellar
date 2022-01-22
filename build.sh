@@ -15,4 +15,6 @@ if [ "$1" = "install" ];
         sudo cp ./intr-lib/interstellar/*.h /usr/local/include/interstellar
         sudo cp ./build/libinterstellar.so /usr/local/lib
         sudo cp ./intr-lib/interstellar.h /usr/local/include
+
+        sudo cp ./build/inter /usr/local/bin
 fi
