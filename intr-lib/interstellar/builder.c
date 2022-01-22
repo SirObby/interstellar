@@ -25,12 +25,15 @@ void compile_jobs(struct project *p, struct project_jobber *pj)
     {
         inter_log(p->source_files[i], JOBS);
 
-        char *s = malloc(4096);
-        char *o = malloc(4096);
-        snprintf(o, 4096, "%s.o", p->source_files[i]);
+        //printf("%s %s %s %s -o %s.o\n", p->cc, p->flags, p->source_files[i], p->ld_flags, p->source_files[i]);
 
-        snprintf(s, 4096, "%s %s %s -o %s", p->cc, p->flags, p->source_files[i], p->ld_flags, o);
+        char *s =  (char *)malloc(FILENAME_MAX + 1);
+        s[FILENAME_MAX + 1] = '\0';
+
+        sprintf(s, "%s %s %s %s -o %s.o", p->cc, p->flags, p->source_files[i], p->ld_flags, p->source_files[i]);
 
         printf("%s\n", s);
+
+        free(s);
     }
 };

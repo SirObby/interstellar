@@ -9,3 +9,8 @@ The Interstellar build system uses the C programming language for configuration 
 ```
 ./build.sh install
 ```
+
+### Compilation
+```
+inter build
+```
