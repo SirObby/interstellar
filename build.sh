@@ -4,8 +4,8 @@ mkdir build
 
 gcc -std=gnu99 ./src/*.c -o ./build/inter -lm -pthread -I./include 
 
-gcc -std=gnu99 ./intr-lib/interstellar.c -c -o ./build/interstellar.o -lm -pthread 
-gcc -std=gnu99 ./intr-lib/interstellar/builder.c -c -o ./build/builder.o -lm -pthread 
+gcc -std=gnu99 ./intr-lib/interstellar.c -c -o ./build/interstellar.o -lm -pthread -fPIC
+gcc -std=gnu99 ./intr-lib/interstellar/builder.c -c -o ./build/builder.o -lm -pthread -fPIC
 gcc -std=gnu99 ./build/interstellar.o ./build/builder.o -shared -o ./build/libinterstellar.so -lm -pthread
 
 if [ "$1" = "install" ];
