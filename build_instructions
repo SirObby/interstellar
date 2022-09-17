@@ -1,0 +1,13 @@
+SRV 00 00 01 ; set required inter version
+GCC
+STF "-Wall" ; Set a CFLAG '-Wall'
+
+PRJ "interstellar" ; Project
+	; tab indentation not required
+	ADS "interstellar" "main.cpp" ; Add source file into project.
+	COM ; COM will compile each file added separately using '-c'
+	LNK "interstellar" "inter" ; link project file
+	; interstellar -> inter
+
+INS "interstellar "installer"
+	MOV binary "/usr/local/bin" ; Moves the binary into /usr/local/bin
